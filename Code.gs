@@ -1,6 +1,13 @@
+//紀錄Google script 相關功能
+
+
+//get current sheet file
 var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+//get current sheet
 var sheet = ss.getActiveSheet();
 
+//delete active range row with confirm
 function deleteSelectRow(){
   var response = SpreadsheetApp.getUi().alert('詢問', '請問是否要刪除?', SpreadsheetApp.getUi().ButtonSet.YES_NO);
   if (response == SpreadsheetApp.getUi().Button.YES){
@@ -8,10 +15,13 @@ function deleteSelectRow(){
   }
 }
 
+//trigger on edit event
 function onEdit(e) {
   // Set a comment on the edited cell to indicate when it was changed.
   var range = e.range;
+  // set custom update
   toUpdateWorkByRange(sheet,range);
+  // get sheet name
   if (sheet.getName().equals("工作清單")) {
     if (range.getA1Notation().substring(0,1).equals("U")){
       //實際完成日期當填入時，會自動將前面的進度，列為完成
@@ -20,6 +30,7 @@ function onEdit(e) {
   }
 }
 
+//update something when user update a range
 function toUpdateWorkByRange(sheet,range){
 
   if (sheet.getName().equals("工作清單")) {
@@ -37,12 +48,13 @@ function toUpdateWorkByRange(sheet,range){
     
   } else if (sheet.getName().equals("時數對應表")){
     if (sheet.getRange(4, range.getColumn()).getValue().equals("處利內容說明")){
+      //set data with a Date 
       sheet.getRange(range.getRow(), range.getColumn() + 1).setValue(new Date());
     }
   }
 }
 
-//異動更新時間資料
+//update last updateDate
 function updateLastUpdateDateColumn(range){
   //尋找欄位
   for(var i = 1; i <= sheet.getLastColumn(); i ++) {
@@ -53,6 +65,7 @@ function updateLastUpdateDateColumn(range){
   }
 }
 
+//update cell data
 function changeHourData(sheet,range,needColumn){
   var row = range.getRow();
  
@@ -68,22 +81,9 @@ function changeHourData(sheet,range,needColumn){
     var currentChangeCell = sheet.getRange(row,range.getColumn());
     currentChangeCell.setValue(0);
   }
-  
 } 
 
-
-function insertDriveComment(fileId, comment, context) {
-  var driveComment = {
-    content: comment,
-    context: {
-      type: 'text/html',
-      value: context
-    }
-  };
-  Drive.Comments.insert(driveComment, fileId);  
-}
-
-//新增資訊申辦單
+//insert a row with some data
 function insertNormalProblem(){
   //塞入目前sheet第4列 (其實是第2列，之所以不放在第1列，是為了屬性套用方便) 
  
@@ -122,13 +122,15 @@ function insertNormalProblem(){
   sheet.getRange('AV4:BF4').copyTo(sheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
 }
 
-//新增線上問題
+//insert a row with other sheet data
 function insertOnlineProblem(){
   //先取目前線上問題編號再加1
+  // get other sheet data
   var settingSheet = ss.getSheetByName("設定");
   var num = settingSheet.getRange(2, 5).getValue();
   var onlineNum = "LINE-" +  paddingLeft((num + 1).toString(),6);
   //取號後塞回
+  //update other sheet data
   settingSheet.getRange(2, 5).setValue((num + 1));
   
   sheet.getRange('3:3').activate();
@@ -170,6 +172,7 @@ function insertOnlineProblem(){
   sheet.getRange('AV4:BF4').copyTo(sheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
 }
 
+//sent email by html template
 function sendEMail(){
   var emailAddress =  sheet.getActiveCell().getValue();
   var subject = "Google 表單資料請記得更新";
@@ -216,8 +219,6 @@ function onOpen() {
   menuEntries.push({name: "再想想2", functionName: "function2"});
 
   ss.addMenu("客製化功能頁by Peter", menuEntries);
-  
-  
 
 }
 
@@ -411,7 +412,7 @@ function getUpdateStr(h1,h2,h3,h4,h5,h6,h7,h8){
   return data;
 }
 
-
+// find  data by column return row
 function findInColumn(column, data,sheet) {
   var column = sheet.getRange(column + ":" + column);  // like A:A
   var values = column.getValues(); 
@@ -425,6 +426,7 @@ function findInColumn(column, data,sheet) {
     return -1;
 }
 
+// find  data by row return column
 function findInRow(data,sheet) {
   var rows  = sheet.getDataRange.getValues(); 
   for (var r=0; r<rows.length; r++) { 
