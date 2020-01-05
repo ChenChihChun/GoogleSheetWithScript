@@ -24,18 +24,6 @@ function toUpdateWorkByRange(sheet,range){
 
   if (sheet.getName().equals("工作清單")) {
 
-    //異動時間欄位
-    /*
-    changeHourData(sheet,range,"需求分析");
-    changeHourData(sheet,range,"需求規劃");
-    changeHourData(sheet,range,"需求開發");
-    changeHourData(sheet,range,"功能驗測");
-    changeHourData(sheet,range,"系統文件");
-    changeHourData(sheet,range,"建構文件");
-    changeHourData(sheet,range,"資料驗證");
-    changeHourData(sheet,range,"資訊驗測");
-    */
-    
     changeHourData(sheet,range,"AC");
     changeHourData(sheet,range,"AD");
     changeHourData(sheet,range,"AE");
@@ -83,33 +71,6 @@ function changeHourData(sheet,range,needColumn){
   
 } 
 
-//修改欄位時間內容
-/*
-function changeHourData(sheet,range,needColumn){
-  var row = range.getRow();
-  //取得當下欄位名稱
-  var title1 = sheet.getRange(2,range.getColumn()).getValue();  
-  if (title1.equals(needColumn + "\n時數")) {
-    //取得總時數
-    var column = 1;
-    for(var i = 1; i <= sheet.getLastColumn(); i ++) {
-      if (sheet.getRange(2, i).getValue().equals(needColumn + "\n時數(總)")) {
-        column = i;
-        break;
-      }
-    }
-    sheet.getRange(row, column)
-    
-    var currentHourCell = sheet.getRange(row,column);
-    var currentHour = currentHourCell.getValue();
-    
-     //加總
-    currentHourCell.setValue(currentHour + range.getValue());
-    //還原
-    var currentChangeCell = sheet.getRange(row,range.getColumn());
-    currentChangeCell.setValue(0);
-  }
-} */
 
 function insertDriveComment(fileId, comment, context) {
   var driveComment = {
@@ -125,26 +86,7 @@ function insertDriveComment(fileId, comment, context) {
 //新增資訊申辦單
 function insertNormalProblem(){
   //塞入目前sheet第4列 (其實是第2列，之所以不放在第1列，是為了屬性套用方便) 
- /* sheet.insertRowAfter(3);
-  //將資料補入
  
-  sheet.getRange("B" + 4).setValue("Ⅹ");//預設
-  sheet.getRange("C" + 4).setValue("尚未");
-  
-  sheet.getRange("H" + 4).setValue(0);
-  sheet.getRange("V" + 4).setValue(new Date());
-  sheet.getRange("W" + 4).setFormula("=if(OR(M4<>\"\"),\"完成\",\"未完成\")");
-  sheet.getRange("X" + 4).setFormula("=if(N4<>\"\",\"確認\",if(M3<>\"\" ,\"確認中\",\"未完成\"))");
-  sheet.getRange("Y" + 4).setFormula("=IF(AA4='設定'!$A$2,\"本月新收\",IF(AND(AA4<'設定'!$A$2,OR(AND(M4=\"\",N4=\"\"),if(M4<>\"\",M4>='設定'!$B$2,N4>='設定'!$B$2))),\"上月待辦\",\"辦結\"))");
-  sheet.getRange("Z" + 4).setFormula("=if(AND(L4>='設定'!$B$2,L4<left('設定'!$C$2,7)&\"/01\"),\"上月\",if(AND(L4>=left('設定'!$C$2,7)&\"/01\",L4<='設定'!$C$2),\"本月\",\"他月\"))");
-  sheet.getRange("AA" + 4).setFormula("=iferror(index('對應表'!$H:$H,match($V4,'對應表'!$I:$I,1)),\"\")");
-  sheet.getRange("AB" + 4).setFormula("=left(V4,7)");
-  sheet.getRange("AC" + 4).setFormula("=iferror(index('對應表'!$H:$H,match(L4,'對應表'!$I:$I,1)),\"待排定\")");
-  sheet.getRange("AD" + 4).setFormula("=if(L4<>\"\",left(L4,7),\"待排定\")");
-  sheet.getRange("AE" + 4).setFormula("=if($M4<>\"\",index('對應表'!$H:$H,match($M4,'對應表'!$I:$I,1)),\"\")");
-  sheet.getRange("AF" + 4).setFormula("=if(M4<>\"\",left(M4,7),\"\")");
-  sheet.getRange("AG" + 4).setFormula("=left(K4,3)");
-  */
   sheet.getRange('3:3').activate();
   sheet.insertRowsBefore(sheet.getActiveRange().getRow(), 1);
   sheet.getActiveRange().offset(0, 0, 1, sheet.getActiveRange().getNumColumns()).activate();
